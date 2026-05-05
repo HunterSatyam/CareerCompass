@@ -1,3 +1,4 @@
+import { BASE_URL } from '../../utils/constant';
 import React, { useEffect, useState } from 'react';
 import { BarChart, Activity, TrendingUp, Users } from 'lucide-react';
 import { motion } from 'framer-motion';
@@ -11,7 +12,7 @@ const SysAdminAnalytics = () => {
     useEffect(() => {
         const fetchAnalytics = async () => {
             try {
-                const res = await axios.get('http://localhost:8000/api/v1/admin/analytics', {
+                const res = await axios.get('${BASE_URL}/api/v1/admin/analytics', {
                     withCredentials: true
                 });
                 if (res.data.success) {

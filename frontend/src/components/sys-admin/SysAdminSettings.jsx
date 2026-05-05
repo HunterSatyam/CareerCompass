@@ -1,3 +1,4 @@
+import { BASE_URL } from '../../utils/constant';
 import React, { useState } from 'react';
 import { Shield, Bell, Key, Globe, Database, Save, Server } from 'lucide-react';
 import { toast } from 'sonner';

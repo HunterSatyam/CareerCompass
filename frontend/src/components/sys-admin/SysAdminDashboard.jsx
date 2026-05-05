@@ -1,3 +1,4 @@
+import { BASE_URL } from '../../utils/constant';
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { Users, Briefcase, FileText } from 'lucide-react';
@@ -13,7 +14,7 @@ const SysAdminDashboard = () => {
     useEffect(() => {
         const fetchStats = async () => {
             try {
-                const res = await axios.get(`http://localhost:8000/api/v1/admin/dashboard/stats`, {
+                const res = await axios.get(`${BASE_URL}/api/v1/admin/dashboard/stats`, {
                     withCredentials: true
                 });
                 if (res.data.success) {

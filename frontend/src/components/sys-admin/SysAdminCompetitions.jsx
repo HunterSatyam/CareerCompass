@@ -1,3 +1,4 @@
+import { BASE_URL } from '../../utils/constant';
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { toast } from 'sonner';
@@ -16,7 +17,7 @@ const SysAdminCompetitions = () => {
     const fetchCompetitions = async () => {
         try {
             setLoading(true);
-            const res = await axios.get(`http://localhost:8000/api/v1/admin/competitions`, {
+            const res = await axios.get(`${BASE_URL}/api/v1/admin/competitions`, {
                 withCredentials: true
             });
             if (res.data.success) {

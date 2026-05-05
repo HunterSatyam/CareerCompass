@@ -1,3 +1,4 @@
+import { BASE_URL } from '../../utils/constant';
 import React, { useState } from 'react';
 import { Bell, CheckCircle, Info, AlertTriangle, ShieldAlert } from 'lucide-react';
 import { toast } from 'sonner';

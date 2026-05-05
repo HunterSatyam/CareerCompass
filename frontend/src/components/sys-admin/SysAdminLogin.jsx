@@ -1,3 +1,4 @@
+import { BASE_URL } from '../../utils/constant';
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
@@ -22,7 +23,7 @@ const SysAdminLogin = () => {
         e.preventDefault();
         try {
             setLoading(true);
-            const res = await axios.post(`http://localhost:8000/api/v1/admin/login`, { email, password }, {
+            const res = await axios.post(`${BASE_URL}/api/v1/admin/login`, { email, password }, {
                 headers: { "Content-Type": "application/json" },
                 withCredentials: true,
             });

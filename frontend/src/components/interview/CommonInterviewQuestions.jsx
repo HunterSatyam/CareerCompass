@@ -178,11 +178,11 @@ const CommonInterviewQuestions = () => {
     return (
         <div className='min-h-screen bg-gray-50 dark:bg-zinc-950 transition-colors duration-300'>
             <Navbar />
-            
+
             <main className='max-w-5xl mx-auto px-6 py-16'>
                 <div className='flex flex-col md:flex-row md:items-center justify-between mb-16 gap-6'>
                     <div className='max-w-2xl'>
-                        <motion.div 
+                        <motion.div
                             initial={{ opacity: 0, x: -20 }}
                             animate={{ opacity: 1, x: 0 }}
                             className='inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-amber-500/10 border border-amber-500/20 mb-6'
@@ -197,7 +197,7 @@ const CommonInterviewQuestions = () => {
                             Master the 27 most critical questions asked in professional interviews. Learn the strategy behind each question and perfect your response.
                         </p>
                     </div>
-                    <Button 
+                    <Button
                         onClick={handleDownloadPDF}
                         className='bg-zinc-900 dark:bg-zinc-800 hover:bg-zinc-800 text-white rounded-2xl px-8 py-7 flex items-center gap-3 font-bold shadow-xl shadow-zinc-500/10 print:hidden'
                     >
@@ -208,7 +208,7 @@ const CommonInterviewQuestions = () => {
 
                 <div className='space-y-12'>
                     {commonQuestions.map((item, index) => (
-                        <motion.div 
+                        <motion.div
                             key={item.id}
                             initial={{ opacity: 0, y: 30 }}
                             whileInView={{ opacity: 1, y: 0 }}
@@ -261,7 +261,7 @@ const CommonInterviewQuestions = () => {
                     <div className='relative z-10'>
                         <h2 className='text-3xl font-black text-white mb-4'>Ready to Ace Your Interview?</h2>
                         <p className='text-zinc-400 mb-10 max-w-lg mx-auto'>Apply these strategies to real company questions in our interactive practice mode.</p>
-                        <Button 
+                        <Button
                             onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
                             className='bg-amber-500 hover:bg-amber-600 text-black px-10 py-7 rounded-2xl font-black uppercase tracking-widest text-xs transition-all hover:scale-105'
                         >

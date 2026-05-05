@@ -1,3 +1,4 @@
+import { BASE_URL } from '../../utils/constant';
 import React from 'react';
 import { NavLink, Outlet, useNavigate, Link } from 'react-router-dom';
 import { LayoutDashboard, Users, Briefcase, Trophy, Video, FileText, Bell, BarChart, Settings, LogOut, Code, Award, Sparkles } from 'lucide-react';
@@ -12,7 +13,7 @@ const SysAdminLayout = () => {
 
     const handleLogout = async () => {
         try {
-            const res = await axios.get(`http://localhost:8000/api/v1/admin/logout`, {
+            const res = await axios.get(`${BASE_URL}/api/v1/admin/logout`, {
                 withCredentials: true
             });
             if (res.data.success) {

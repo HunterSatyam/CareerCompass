@@ -1,3 +1,4 @@
+import { BASE_URL } from '../../utils/constant';
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { toast } from 'sonner';
@@ -16,7 +17,7 @@ const SysAdminCertifications = () => {
     const fetchCerts = async () => {
         try {
             setLoading(true);
-            const res = await axios.get(`http://localhost:8000/api/v1/admin/certifications`, {
+            const res = await axios.get(`${BASE_URL}/api/v1/admin/certifications`, {
                 withCredentials: true
             });
             if (res.data.success) {

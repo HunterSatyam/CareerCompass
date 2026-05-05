@@ -1,3 +1,4 @@
+import { BASE_URL } from '../../utils/constant';
 import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
 import { User as UserIcon, Mail, Shield, Key, Clock, Settings, Save } from 'lucide-react';

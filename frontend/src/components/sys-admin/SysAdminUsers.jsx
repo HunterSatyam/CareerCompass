@@ -1,3 +1,4 @@
+import { BASE_URL } from '../../utils/constant';
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { toast } from 'sonner';
@@ -25,7 +26,7 @@ const SysAdminUsers = () => {
     const fetchUsers = async () => {
         try {
             setLoading(true);
-            const res = await axios.get(`http://localhost:8000/api/v1/admin/users`, {
+            const res = await axios.get(`${BASE_URL}/api/v1/admin/users`, {
                 withCredentials: true
             });
             if (res.data.success) {
@@ -40,7 +41,7 @@ const SysAdminUsers = () => {
 
     const handleSuspend = async (userId, currentStatus) => {
         try {
-            const res = await axios.put(`http://localhost:8000/api/v1/admin/users/${userId}/suspend`, {}, {
+            const res = await axios.put(`${BASE_URL}/api/v1/admin/users/${userId}/suspend`, {}, {
                 withCredentials: true
             });
             if (res.data.success) {
@@ -57,7 +58,7 @@ const SysAdminUsers = () => {
         if (!window.confirm("Are you sure you want to completely delete this user?")) return;
 
         try {
-            const res = await axios.delete(`http://localhost:8000/api/v1/admin/users/${userId}`, {
+            const res = await axios.delete(`${BASE_URL}/api/v1/admin/users/${userId}`, {
                 withCredentials: true
             });
             if (res.data.success) {
@@ -80,7 +81,7 @@ const SysAdminUsers = () => {
     const handleUpdateUser = async (e) => {
         e.preventDefault();
         try {
-            const res = await axios.put(`http://localhost:8000/api/v1/admin/users/${selectedUser._id}`, editForm, {
+            const res = await axios.put(`${BASE_URL}/api/v1/admin/users/${selectedUser._id}`, editForm, {
                 withCredentials: true
             });
             if (res.data.success) {
