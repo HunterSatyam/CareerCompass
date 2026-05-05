@@ -1,0 +1,56 @@
+import { User } from "../models/user.model.js";
+import { Notification } from "../models/notification.model.js";
+
+export const notifyMatchingApplicants = async (event, eventType) => {
+    try {
+        const eventRequirements = event.requirements || [];
+        const eventTitle = event.title || "";
+        const eventDescription = event.description || "";
+
+        const applicants = await User.find({ role: 'applicant' });
+
+        const newNotifications = [];
+
+        for (const applicant of applicants) {
+            const applicantSkills = applicant.profile?.skills || [];
+
+            // Basic matching logic: 
+            // 1. Check if any event requirement mentions an applicant skill
+            // 2. Check if the event title or description mentions an applicant skill
+            const isMatch = applicantSkills.some(skill => {
+                const lowerSkill = skill.toLowerCase();
+
+                const matchInReqs = eventRequirements.some(req =>
+                    req.toLowerCase().includes(lowerSkill) || lowerSkill.includes(req.toLowerCase())
+                );
+
+                const matchInText = eventTitle.toLowerCase().includes(lowerSkill) ||
+                    eventDescription.toLowerCase().includes(lowerSkill);
+
+                return matchInReqs || matchInText;
+            });
+
+            if (isMatch || applicantSkills.length === 0) {
+                newNotifications.push({
+                    userId: applicant._id,
+                    title: `New ${eventType} Alert!`,
+                    message: `"${event.title}" has been posted. Don't miss out!`,
+                    type: eventType,
+                    eventId: event._id
+                });
+            }
+        }
+
+        if (newNotifications.length > 0) {
+            await Notification.insertMany(newNotifications);
+            console.log(`Sent ${newNotifications.length} notifications for ${event.title}`);
+        } else {
+            console.log(`No matching applicants found for ${event.title}`);
+        }
+    } catch (error) {
+        console.error("Error sending notifications:", error);
+    }
+}
+
+// Keep alias for compatibility until all controllers are updated
+export const notifyMatchingStudents = notifyMatchingApplicants;
