@@ -155,7 +155,12 @@ export const login = async (req, res) => {
             profile: user.profile
         }
 
-        return res.status(200).cookie("token", token, { maxAge: 1 * 24 * 60 * 60 * 1000, httpOnly: true, sameSite: 'strict' }).json({
+        return res.status(200).cookie("token", token, { 
+            maxAge: 1 * 24 * 60 * 60 * 1000, 
+            httpOnly: true, 
+            sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax', 
+            secure: process.env.NODE_ENV === 'production' 
+        }).json({
             message: `Welcome back ${user.fullname}`,
             user,
             success: true
@@ -263,7 +268,12 @@ export const resendVerificationCode = async (req, res) => {
 
 export const logout = async (req, res) => {
     try {
-        return res.status(200).cookie("token", "", { maxAge: 0 }).json({
+        return res.status(200).cookie("token", "", { 
+            maxAge: 0,
+            httpOnly: true,
+            sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
+            secure: process.env.NODE_ENV === 'production'
+        }).json({
             message: "Logged out successfully.",
             success: true
         })
@@ -393,12 +403,17 @@ export const socialLogin = async (req, res) => {
         const token = await jwt.sign(tokenData, process.env.SECRET_KEY, { expiresIn: '1d' });
 
         return res.status(200)
-            .cookie("token", token, { maxAge: 1 * 24 * 60 * 60 * 1000, httpOnly: true, sameSite: 'lax' })
-            .redirect("http://localhost:5173/");
+            .cookie("token", token, { 
+                maxAge: 1 * 24 * 60 * 60 * 1000, 
+                httpOnly: true, 
+                sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax', 
+                secure: process.env.NODE_ENV === 'production' 
+            })
+            .redirect(process.env.FRONTEND_URL || "http://localhost:5173/");
 
     } catch (error) {
         console.log(error);
-        return res.redirect("http://localhost:5173/login");
+        return res.redirect(`${process.env.FRONTEND_URL || "http://localhost:5173"}/login`);
     }
 }
 
@@ -536,7 +551,7 @@ export const forgotPassword = async (req, res) => {
         await user.save();
 
         // Send reset email
-        const frontendUrl = req.get('origin') || 'http://localhost:5173';
+        const frontendUrl = process.env.FRONTEND_URL || req.get('origin') || 'http://localhost:5173';
         const resetLink = `${frontendUrl}/reset-password/${resetToken}`;
         await sendResetPasswordEmail(user.fullname, user.email, resetLink);
 

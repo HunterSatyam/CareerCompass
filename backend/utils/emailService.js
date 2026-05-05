@@ -43,7 +43,7 @@ export const sendWelcomeEmail = async (fullname, email) => {
                         </ul>
                     </div>
                     <div style="text-align: center; margin: 32px 0;">
-                        <a href="http://localhost:5173/" style="display: inline-block; background: linear-gradient(135deg, #7c3aed, #3b82f6); color: white; text-decoration: none; padding: 14px 40px; border-radius: 12px; font-weight: 700; font-size: 16px;">
+                        <a href="${process.env.FRONTEND_URL || 'http://localhost:5173'}/" style="display: inline-block; background: linear-gradient(135deg, #7c3aed, #3b82f6); color: white; text-decoration: none; padding: 14px 40px; border-radius: 12px; font-weight: 700; font-size: 16px;">
                             Explore CareerCompass
                         </a>
                     </div>
@@ -165,7 +165,7 @@ export const sendJobNotificationEmail = async (emails, jobDetails) => {
                         <p style="margin: 5px 0;"><strong>🎓 Experience:</strong> ${jobDetails.experience} Years</p>
                     </div>
 
-                    <a href="http://localhost:5173/description/job/${jobDetails.id}" style="display: block; width: 100%; background: #4f46e5; color: white; text-align: center; padding: 12px 0; border-radius: 8px; text-decoration: none; font-weight: bold;">View Job & Apply</a>
+                    <a href="${process.env.FRONTEND_URL || 'http://localhost:5173'}/description/job/${jobDetails.id}" style="display: block; width: 100%; background: #4f46e5; color: white; text-align: center; padding: 12px 0; border-radius: 8px; text-decoration: none; font-weight: bold;">View Job & Apply</a>
                 </div>
             </div>
             `,
