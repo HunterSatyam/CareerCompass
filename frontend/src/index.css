@@ -1,11 +1,16 @@
 @import "tailwindcss";
 
+@custom-variant dark (&:where(.dark, .dark *));
+
 @theme {
     --color-border: hsl(var(--border));
     --color-input: hsl(var(--input));
     --color-ring: hsl(var(--ring));
     --color-background: hsl(var(--background));
     --color-foreground: hsl(var(--foreground));
+    --color-surface: hsl(var(--surface));
+    --color-surface-elevated: hsl(var(--surface-elevated));
+    --color-surface-subtle: hsl(var(--surface-subtle));
 
     --color-primary: hsl(var(--primary));
     --color-primary-foreground: hsl(var(--primary-foreground));
@@ -34,57 +39,112 @@
 }
 
 :root {
-    --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
-    --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
+    --background: 0 0% 100%;         /* #ffffff */
+    --foreground: 0 0% 7%;           /* #111111 */
+    --surface: 0 0% 96%;             /* #f5f5f5 */
+    --surface-elevated: 0 0% 100%;
+    --surface-subtle: 220 20% 98%;
+    --card: 0 0% 96%;                /* #f5f5f5 */
+    --card-foreground: 0 0% 7%;
     --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
-    --primary: 222.2 47.4% 11.2%;
+    --popover-foreground: 0 0% 7%;
+    --primary: 252 74% 52%;
     --primary-foreground: 210 40% 98%;
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
+    --secondary: 0 0% 96%;
+    --secondary-foreground: 0 0% 7%;
+    --muted: 220 14% 94%;
+    --muted-foreground: 220 9% 40%;
+    --accent: 243 75% 96%;
+    --accent-foreground: 252 74% 30%;
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 210 40% 98%;
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 222.2 84% 4.9%;
-    --radius: 0.5rem;
+    --border: 220 13% 90%;
+    --input: 220 13% 88%;
+    --ring: 252 74% 52%;
+    --radius: 0.75rem;
 }
 
 .dark {
-    --background: 222.2 84% 4.9%;
-    --foreground: 210 40% 98%;
-    --card: 222.2 84% 4.9%;
+    --background: 222 47% 11%;      /* #0f172a */
+    --foreground: 210 40% 98%;      /* #f8fafc */
+    --surface: 215 32% 17%;         /* #1e293b */
+    --surface-elevated: 217 33% 14%;
+    --surface-subtle: 222 45% 13%;
+    --card: 215 32% 17%;            /* #1e293b */
     --card-foreground: 210 40% 98%;
-    --popover: 222.2 84% 4.9%;
+    --popover: 217 33% 14%;
     --popover-foreground: 210 40% 98%;
-    --primary: 210 40% 98%;
-    --primary-foreground: 222.2 47.4% 11.2%;
-    --secondary: 217.2 32.6% 17.5%;
+    --primary: 255 92% 76%;
+    --primary-foreground: 222 47% 11%;
+    --secondary: 215 32% 17%;
     --secondary-foreground: 210 40% 98%;
-    --muted: 217.2 32.6% 17.5%;
-    --muted-foreground: 215 20.2% 65.1%;
-    --accent: 217.2 32.6% 17.5%;
+    --muted: 215 28% 23%;
+    --muted-foreground: 215 20% 72%;
+    --accent: 215 28% 23%;
     --accent-foreground: 210 40% 98%;
-    --destructive: 0 62.8% 30.6%;
+    --destructive: 0 72% 51%;
     --destructive-foreground: 210 40% 98%;
-    --border: 217.2 32.6% 17.5%;
-    --input: 217.2 32.6% 17.5%;
-    --ring: 212.7 26.8% 83.9%;
+    --border: 215 25% 27%;
+    --input: 215 25% 27%;
+    --ring: 255 92% 76%;
 }
 
 @layer base {
+    html {
+        background: hsl(var(--background));
+        color: hsl(var(--foreground));
+        color-scheme: light;
+    }
+
+    html.dark {
+        color-scheme: dark;
+    }
+
     * {
         @apply border-border;
     }
 
+    *:focus-visible {
+        @apply outline-none ring-2 ring-ring ring-offset-2 ring-offset-background;
+    }
+
+    *::selection {
+        background: hsl(var(--primary) / 0.2);
+        color: hsl(var(--foreground));
+    }
+
     body {
-        @apply bg-background text-foreground;
+        @apply min-h-screen bg-background text-foreground antialiased transition-colors duration-300 ease-in-out;
+    }
+
+    #root {
+        @apply min-h-screen bg-background text-foreground;
+    }
+
+    button,
+    a,
+    input,
+    textarea,
+    select,
+    [role="button"] {
+        @apply transition-colors duration-300;
+    }
+
+    input,
+    textarea,
+    select {
+        @apply bg-background text-foreground placeholder:text-muted-foreground;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        *,
+        *::before,
+        *::after {
+            animation-duration: 0.01ms !important;
+            animation-iteration-count: 1 !important;
+            scroll-behavior: auto !important;
+            transition-duration: 0.01ms !important;
+        }
     }
 
     .custom-scrollbar::-webkit-scrollbar {
@@ -92,17 +152,17 @@
     }
 
     .custom-scrollbar::-webkit-scrollbar-track {
-        background: #f1f5f9;
+        background: hsl(var(--muted));
         border-radius: 10px;
     }
 
     .custom-scrollbar::-webkit-scrollbar-thumb {
-        background: #cbd5e1;
+        background: hsl(var(--muted-foreground) / 0.35);
         border-radius: 10px;
-        border: 2px solid #f1f5f9;
+        border: 2px solid hsl(var(--muted));
     }
 
     .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-        background: #94a3b8;
+        background: hsl(var(--muted-foreground) / 0.6);
     }
 }

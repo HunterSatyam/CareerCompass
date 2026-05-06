@@ -1,13 +1,12 @@
 import React, { useState } from 'react';
 import Navbar from './shared/Navbar';
-import { useSelector, useDispatch } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { motion } from 'framer-motion';
 import {
     User,
     Lock,
     Bell,
     Shield,
-    Moon,
     Sun,
     Trash2,
     ChevronRight,
@@ -25,13 +24,15 @@ import {
 } from 'lucide-react';
 import { Button } from './ui/button';
 import { Switch } from './ui/switch';
-import { toggleTheme } from '@/redux/themeSlice';
 import { toast } from 'sonner';
+import ThemeToggle from './ThemeToggle';
+import { useTheme } from '@/context/useTheme';
+
+const MotionDiv = motion.div;
 
 const Settings = () => {
     const { user } = useSelector(store => store.auth);
-    const { mode } = useSelector(store => store.theme);
-    const dispatch = useDispatch();
+    const { theme, resolvedTheme } = useTheme();
     const [activeTab, setActiveTab] = useState('account');
 
     const tabs = [
@@ -55,7 +56,7 @@ const Settings = () => {
             <Navbar />
 
             <div className='max-w-6xl mx-auto py-12 px-4'>
-                <motion.div
+                <MotionDiv
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     className='mb-10 text-center md:text-left'
@@ -65,7 +66,7 @@ const Settings = () => {
                     </div>
                     <h1 className='text-4xl font-black text-gray-900 dark:text-white tracking-tight uppercase'>Account <span className='text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-purple-600 dark:from-indigo-400 dark:to-purple-400'>Settings</span></h1>
                     <p className='text-gray-500 dark:text-zinc-500 mt-2 font-medium'>Manage your account preferences, security, and appearance.</p>
-                </motion.div>
+                </MotionDiv>
 
                 <div className='grid grid-cols-1 lg:grid-cols-12 gap-8'>
                     {/* Sidebar Tabs */}
@@ -97,7 +98,7 @@ const Settings = () => {
 
                     {/* Content Area */}
                     <div className='lg:col-span-9'>
-                        <motion.div
+                        <MotionDiv
                             key={activeTab}
                             initial={{ opacity: 0, x: 20 }}
                             animate={{ opacity: 1, x: 0 }}
@@ -171,17 +172,16 @@ const Settings = () => {
                                         <div className='flex items-center justify-between p-6 bg-gray-50 dark:bg-zinc-800/30 rounded-[32px] border border-gray-100 dark:border-zinc-800 group hover:border-indigo-200 dark:hover:border-indigo-900/50 transition-all'>
                                             <div className='flex items-center gap-4'>
                                                 <div className='p-3 bg-white dark:bg-zinc-800 rounded-2xl text-indigo-600 dark:text-indigo-400 shadow-sm'>
-                                                    {mode === 'dark' ? <Moon size={24} /> : <Sun size={24} />}
+                                                    <Sun size={24} />
                                                 </div>
                                                 <div>
-                                                    <p className='font-black text-gray-900 dark:text-white uppercase text-xs tracking-widest'>Dark Mode</p>
-                                                    <p className='text-[10px] text-gray-500 dark:text-zinc-500 font-bold uppercase tracking-tight mt-1'>Switch between light and dark themes</p>
+                                                    <p className='font-black text-gray-900 dark:text-white uppercase text-xs tracking-widest'>Theme</p>
+                                                    <p className='text-[10px] text-gray-500 dark:text-zinc-500 font-bold uppercase tracking-tight mt-1'>
+                                                        {theme === 'system' ? `Following system (${resolvedTheme})` : `Using ${theme} mode`}
+                                                    </p>
                                                 </div>
                                             </div>
-                                            <Switch
-                                                checked={mode === 'dark'}
-                                                onCheckedChange={() => dispatch(toggleTheme())}
-                                            />
+                                            <ThemeToggle />
                                         </div>
 
                                         <div className='flex items-center justify-between p-6 bg-gray-50 dark:bg-zinc-800/30 rounded-[32px] border border-gray-100 dark:border-zinc-800 opacity-50 cursor-not-allowed'>
@@ -300,7 +300,7 @@ const Settings = () => {
                                     </div>
                                 </div>
                             )}
-                        </motion.div>
+                        </MotionDiv>
                     </div>
                 </div>
             </div>

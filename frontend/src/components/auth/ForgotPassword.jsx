@@ -20,12 +20,14 @@ const ForgotPassword = () => {
             setLoading(true)
             const res = await axios.post(`${USER_API_END_POINT}/forgot-password`, { email }, {
                 headers: { "Content-Type": "application/json" },
+                withCredentials: true,
             })
             if (res.data.success) {
                 setSent(true)
                 toast.success(res.data.message)
             }
         } catch (error) {
+            console.error("Forgot Password Error:", error);
             toast.error(error.response?.data?.message || "Something went wrong")
         } finally {
             setLoading(false)

@@ -2,7 +2,7 @@ import React from 'react'
 import { Popover, PopoverContent, PopoverTrigger } from '../ui/popover'
 import { Button } from '../ui/button'
 import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar'
-import { LogOut, User2, Heart, Bell, Menu, Home, Building2, FileText, PlusCircle, Sparkles, FileEdit, Search, ChevronRight, Briefcase, Sun, Moon, Settings, Users, Trophy, Code, BookOpen } from 'lucide-react'
+import { LogOut, User2, Heart, Bell, Menu, Home, Building2, FileText, PlusCircle, Sparkles, FileEdit, Search, ChevronRight, Briefcase, Settings, Users, Trophy, BookOpen } from 'lucide-react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import axios from 'axios'
@@ -10,13 +10,12 @@ import { USER_API_END_POINT } from '@/utils/constant'
 import { setUser } from '@/redux/authSlice'
 import { toast } from 'sonner'
 import useGetNotifications from '@/hooks/useGetNotifications'
-import { toggleTheme } from '@/redux/themeSlice'
+import ThemeToggle from '../ThemeToggle'
 
 const Navbar = () => {
     useGetNotifications();
     const { user } = useSelector(store => store.auth);
     const { allNotifications } = useSelector(store => store.notification);
-    const { mode } = useSelector(store => store.theme);
     const dispatch = useDispatch();
 
     const navigate = useNavigate();
@@ -35,7 +34,7 @@ const Navbar = () => {
         }
     }
     return (
-        <div className='sticky top-0 z-50 bg-white/80 dark:bg-zinc-900/80 backdrop-blur-md border-b border-gray-100 dark:border-zinc-800 transition-colors duration-300'>
+        <div className='sticky top-0 z-50 bg-surface-elevated/80 backdrop-blur-md border-b border-border transition-colors duration-300'>
             <div className='flex items-center justify-between mx-auto max-w-7xl h-16 px-12'>
                 <div className='flex items-center gap-4'>
                     <Popover>
@@ -147,14 +146,7 @@ const Navbar = () => {
 
                     </ul>
 
-                    <Button
-                        variant="ghost"
-                        size="icon"
-                        onClick={() => dispatch(toggleTheme())}
-                        className="rounded-full hover:bg-gray-100 dark:hover:bg-zinc-800 text-gray-600 dark:text-gray-400 transition-all duration-300"
-                    >
-                        {mode === 'light' ? <Moon size={20} /> : <Sun size={20} />}
-                    </Button>
+                    <ThemeToggle />
 
                     {
                         !user ? (

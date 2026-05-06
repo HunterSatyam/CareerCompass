@@ -614,3 +614,40 @@ export const resetPassword = async (req, res) => {
         });
     }
 };
+
+export const updateTheme = async (req, res) => {
+    try {
+        const { theme } = req.body;
+        const userId = req.id;
+
+        if (!['light', 'dark', 'system'].includes(theme)) {
+            return res.status(400).json({
+                message: "Invalid theme type",
+                success: false
+            });
+        }
+
+        const user = await User.findById(userId);
+        if (!user) {
+            return res.status(404).json({
+                message: "User not found",
+                success: false
+            });
+        }
+
+        user.theme = theme;
+        await user.save();
+
+        return res.status(200).json({
+            message: "Theme updated successfully",
+            user,
+            success: true
+        });
+    } catch (error) {
+        console.error("Update Theme Error:", error);
+        return res.status(500).json({
+            message: "Internal server error",
+            success: false
+        });
+    }
+};

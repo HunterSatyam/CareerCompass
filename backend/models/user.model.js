@@ -97,5 +97,10 @@ const userSchema = new mongoose.Schema({
     verificationCodeExpires: {
         type: Date,
     },
+    theme: {
+        type: String,
+        enum: ['light', 'dark', 'system'],
+        default: 'system'
+    },
 }, { timestamps: true });
 export const User = mongoose.model('User', userSchema);

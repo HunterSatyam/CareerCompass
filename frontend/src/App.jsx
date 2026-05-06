@@ -48,7 +48,7 @@ import ObjectiveQuestions from './components/interview/ObjectiveQuestions'
 import SubjectiveQuestions from './components/interview/SubjectiveQuestions'
 import CommonInterviewQuestions from './components/interview/CommonInterviewQuestions'
 import { useEffect } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
+import { useDispatch } from 'react-redux'
 import { setUser } from './redux/authSlice'
 import { USER_API_END_POINT } from './utils/constant'
 import axios from 'axios'
@@ -249,15 +249,6 @@ const appRouter = createBrowserRouter([
 
 function App() {
   const dispatch = useDispatch();
-  const { mode } = useSelector(store => store.theme);
-
-  useEffect(() => {
-    if (mode === 'dark') {
-      document.documentElement.classList.add('dark');
-    } else {
-      document.documentElement.classList.remove('dark');
-    }
-  }, [mode]);
 
   useEffect(() => {
     const fetchUser = async () => {

@@ -1,5 +1,5 @@
 import express from "express";
-import { login, logout, register, updateProfile, socialLogin, getMyProfile, toggleSavedEvent, getSavedEvents, forgotPassword, resetPassword, verifyEmail, resendVerificationCode } from "../controllers/user.controller.js";
+import { login, logout, register, updateProfile, socialLogin, getMyProfile, toggleSavedEvent, getSavedEvents, forgotPassword, resetPassword, verifyEmail, resendVerificationCode, updateTheme } from "../controllers/user.controller.js";
 
 import passport from "passport";
 import isAuthenticated from "../middlewares/isAuthenticated.js";
@@ -17,6 +17,7 @@ router.route("/logout").get(logout);
 router.route("/forgot-password").post(forgotPassword);
 router.route("/reset-password/:token").post(resetPassword);
 router.route("/profile/update").post(isAuthenticated, upload.fields([{ name: 'profilePhoto', maxCount: 1 }, { name: 'file', maxCount: 1 }]), updateProfile);
+router.route("/theme").post(isAuthenticated, updateTheme);
 
 // Social Login
 router.get("/auth/google", passport.authenticate("google", { scope: ["profile", "email"] }));

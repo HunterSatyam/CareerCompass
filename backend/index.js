@@ -46,12 +46,21 @@ app.use(session({
 app.use(passport.initialize());
 app.use(passport.session());
 app.use("/uploads", express.static(path.join(__dirname, "public/uploads")));
+
 const corsOptions = {
     origin: (origin, callback) => {
-        const allowedOrigins = [process.env.FRONTEND_URL, 'http://localhost:5173', 'http://localhost:5174'].filter(Boolean);
+        const allowedOrigins = [
+            process.env.FRONTEND_URL,
+            'http://localhost:5173',
+            'http://localhost:5174',
+            'http://127.0.0.1:5173',
+            'http://127.0.0.1:5174',
+        ].filter(Boolean);
+        // Allow requests with no origin (mobile apps, curl, etc.)
         if (!origin || allowedOrigins.indexOf(origin) !== -1) {
             callback(null, true);
         } else {
+            console.warn(`CORS blocked request from origin: ${origin}`);
             callback(new Error('Not allowed by CORS'));
         }
     },
@@ -83,10 +92,24 @@ app.use("/api/v1/admin", adminRoute);
 app.use("/api/v1/message", messageRoute);
 app.use("/api/v1/assessment", assessmentRoute);
 app.use("/api/v1/interview", interviewRoute);
-//"http://localhost:8000/api/v1/user/register"
 
+// Health check endpoint
+app.get("/api/v1/health", (req, res) => {
+    res.json({ status: "ok", timestamp: new Date().toISOString() });
+});
 
-app.listen(PORT, () => {
-    connectDB();
-    console.log(`Server running at port ${PORT}`);
-})
+const startServer = async () => {
+    try {
+        await connectDB();
+
+        app.listen(PORT, () => {
+            console.log(`Server running at port ${PORT}`);
+        });
+    } catch (error) {
+        console.error("Failed to start server because MongoDB is unavailable.");
+        console.error(error.message);
+        process.exit(1);
+    }
+};
+
+startServer();
