@@ -1,5 +1,9 @@
-import dotenv from "dotenv";
 dotenv.config({});
+console.log("[DEBUG] Environment Variables Checked:");
+console.log("- MONGO_URI:", process.env.MONGO_URI ? "Present (Length: " + process.env.MONGO_URI.length + ")" : "MISSING");
+console.log("- PORT:", process.env.PORT || "3000 (default)");
+console.log("- FRONTEND_URL:", process.env.FRONTEND_URL || "NOT SET");
+
 import express from "express";
 import cookieParser from "cookie-parser";
 import cors from "cors";
@@ -139,8 +143,11 @@ const startServer = async () => {
             console.log(`Server running at port ${PORT}`);
         });
     } catch (error) {
-        console.error("Failed to start server because MongoDB is unavailable.");
-        console.error(error.message);
+        console.error("CRITICAL: Failed to start server because MongoDB is unavailable.");
+        console.error("Error Message:", error.message);
+        if (error.message.includes("authentication failed")) {
+            console.error("TIP: Your MONGO_URI password or username is likely incorrect. Check your Render Dashboard.");
+        }
         process.exit(1);
     }
 };

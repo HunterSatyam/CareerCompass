@@ -6,10 +6,9 @@ import { User } from "../models/user.model.js";
 import { sendWelcomeEmail } from "./emailService.js";
 import dotenv from "dotenv";
 
-dotenv.config();
+// dotenv.config(); // Removed redundant call
 
 const BASE_URL = process.env.BACKEND_URL || "http://localhost:8000";
-console.log(`Passport initializing with BASE_URL: ${BASE_URL}`);
 
 if (process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET) {
     console.log(`[AUTH] Google Client ID: ${process.env.GOOGLE_CLIENT_ID}`);
