@@ -1,3 +1,4 @@
+import dotenv from "dotenv";
 dotenv.config({});
 console.log("[DEBUG] Environment Variables Checked:");
 console.log("- MONGO_URI:", process.env.MONGO_URI ? "Present (Length: " + process.env.MONGO_URI.length + ")" : "MISSING");
