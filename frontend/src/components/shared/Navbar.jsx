@@ -34,8 +34,8 @@ const Navbar = () => {
         }
     }
     return (
-        <div className='sticky top-0 z-50 bg-surface-elevated/80 backdrop-blur-md border-b border-border transition-colors duration-300'>
-            <div className='flex items-center justify-between mx-auto max-w-7xl h-16 px-12'>
+        <div className='sticky top-0 z-50 border-b border-white/50 bg-white/72 backdrop-blur-2xl transition-colors duration-300 dark:border-white/10 dark:bg-[#09090B]/72'>
+            <div className='mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8'>
                 <div className='flex items-center gap-4'>
                     <Popover>
                         <PopoverTrigger asChild>
@@ -93,16 +93,16 @@ const Navbar = () => {
                         </PopoverContent>
                     </Popover>
                     <Link to="/" className="flex items-center gap-2">
-                        <div className="w-10 h-10 bg-indigo-600 dark:bg-indigo-500 rounded-lg flex items-center justify-center text-white font-bold text-xl">
+                        <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-gradient-to-br from-indigo-600 to-cyan-500 text-xl font-black text-white shadow-lg shadow-indigo-500/20">
                             C
                         </div>
-                        <h2 className="text-2xl font-black tracking-tight text-gray-900 dark:text-white">
+                        <h2 className="text-xl font-black tracking-tight text-gray-900 dark:text-white sm:text-2xl">
                             Career<span className="text-indigo-600 dark:text-indigo-400">Compass</span>
                         </h2>
                     </Link>
                 </div>
-                <div className='flex items-center gap-8'>
-                    <ul className='flex font-black text-sm uppercase tracking-widest items-center gap-6 text-gray-600 dark:text-gray-400'>
+                <div className='flex items-center gap-3 lg:gap-6'>
+                    <ul className='hidden items-center gap-5 text-xs font-black uppercase tracking-widest text-gray-600 dark:text-gray-400 lg:flex'>
                         {
                             user && user.role === 'recruiter' ? (
                                 <>
@@ -111,6 +111,7 @@ const Navbar = () => {
                                     <li className='hover:text-purple-600 transition-colors text-zinc-900 dark:text-zinc-100'><Link to="/admin/posts">Posts</Link></li>
                                     <li className='hover:text-purple-600 transition-colors text-zinc-900 dark:text-zinc-100'><Link to="/admin/create">Create Post</Link></li>
                                     <li className='hover:text-purple-600 transition-colors text-zinc-900 dark:text-zinc-100'><Link to="/admin/interview/hub">Interview Hub</Link></li>
+                                    <li className='hover:text-purple-600 transition-colors text-zinc-900 dark:text-zinc-100'><Link to="/admin/interview/questions">Question Bank</Link></li>
                                     <li className='hover:text-purple-600 transition-colors text-zinc-900 dark:text-zinc-100'><Link to="/community">Community</Link></li>
                                 </>
                             ) : (
@@ -145,6 +146,13 @@ const Navbar = () => {
 
 
                     </ul>
+
+                    <Link to="/interview/mock" className='hidden md:block'>
+                        <Button className="h-10 rounded-2xl bg-gray-950 px-4 text-xs font-black uppercase tracking-widest text-white shadow-lg shadow-indigo-500/10 hover:bg-indigo-600 dark:bg-white dark:text-gray-950 dark:hover:bg-indigo-100">
+                            <Sparkles className="mr-2 h-4 w-4" />
+                            AI Assistant
+                        </Button>
+                    </Link>
 
                     <ThemeToggle />
 

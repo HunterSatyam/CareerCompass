@@ -42,8 +42,10 @@ import Community from './components/Community'
 import AssessmentTest from './components/AssessmentTest'
 import MockInterview from './components/interview/MockInterview'
 import PracticeQuestion from './components/interview/PracticeQuestion'
+import CompanyInterviewQuestions from './components/interview/CompanyInterviewQuestions'
 import AdminInterviewHub from './components/admin/interview/AdminInterviewHub'
 import AddInterviewQuestion from './components/admin/interview/AddInterviewQuestion'
+import QuestionManagementSystem from './components/admin/interview/QuestionManagementSystem'
 import ObjectiveQuestions from './components/interview/ObjectiveQuestions'
 import SubjectiveQuestions from './components/interview/SubjectiveQuestions'
 import CommonInterviewQuestions from './components/interview/CommonInterviewQuestions'
@@ -151,8 +153,20 @@ const appRouter = createBrowserRouter([
     element: <PracticeQuestion />
   },
   {
+    path: '/interview/company/:companyId',
+    element: <CompanyInterviewQuestions />
+  },
+  {
     path: '/admin/interview/hub',
     element: <AdminInterviewHub />
+  },
+  {
+    path: '/admin/interview/questions',
+    element: <QuestionManagementSystem />
+  },
+  {
+    path: '/recruiter/interview/questions',
+    element: <QuestionManagementSystem />
   },
   {
     path: '/admin/interview/add-question/:companyId',
@@ -225,6 +239,18 @@ const appRouter = createBrowserRouter([
       {
         path: 'certifications',
         element: <SysAdminCertifications />
+      },
+      {
+        path: 'mock-interview',
+        element: <AdminInterviewHub embedded basePath="/sys-admin/mock-interview" />
+      },
+      {
+        path: 'mock-interview/questions',
+        element: <QuestionManagementSystem embedded />
+      },
+      {
+        path: 'mock-interview/add-question/:companyId',
+        element: <AddInterviewQuestion embedded afterSavePath="/sys-admin/mock-interview" />
       },
       {
         path: 'analytics',

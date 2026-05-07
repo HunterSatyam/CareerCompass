@@ -4,13 +4,12 @@ import Footer from '../../shared/Footer';
 import { Plus, Search, Building2, Trash2, Edit3, ArrowRight, Star, ExternalLink } from 'lucide-react';
 import { Button } from '../../ui/button';
 import { Input } from '../../ui/input';
-import { motion, AnimatePresence } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { INTERVIEW_API_END_POINT } from '@/utils/constant';
 import { toast } from 'sonner';
 
-const AdminInterviewHub = () => {
+const AdminInterviewHub = ({ embedded = false, basePath = '/admin/interview' }) => {
     const [companies, setCompanies] = useState([]);
     const [searchTerm, setSearchTerm] = useState('');
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -60,9 +59,9 @@ const AdminInterviewHub = () => {
     const filteredCompanies = companies.filter(c => c.name.toLowerCase().includes(searchTerm.toLowerCase()));
 
     return (
-        <div className='min-h-screen bg-gray-50 dark:bg-zinc-950 transition-colors duration-300'>
-            <Navbar />
-            <main className='max-w-7xl mx-auto px-6 py-12'>
+        <div className={embedded ? 'bg-transparent' : 'min-h-screen bg-gray-50 dark:bg-zinc-950 transition-colors duration-300'}>
+            {!embedded && <Navbar />}
+            <main className={embedded ? 'max-w-7xl mx-auto' : 'max-w-7xl mx-auto px-6 py-12'}>
                 <div className='flex flex-col md:flex-row md:items-center justify-between mb-12 gap-6'>
                     <div>
                         <h1 className='text-3xl font-black text-gray-900 dark:text-white uppercase tracking-tight'>Interview Companies</h1>
@@ -78,6 +77,14 @@ const AdminInterviewHub = () => {
                                 onChange={(e) => setSearchTerm(e.target.value)}
                             />
                         </div>
+                        <Button 
+                            onClick={() => navigate(`${basePath}/questions`)}
+                            variant='outline'
+                            className='rounded-xl px-6 flex items-center gap-2 font-bold'
+                        >
+                            <Search size={18} />
+                            Question Bank
+                        </Button>
                         <Button 
                             onClick={() => setIsModalOpen(true)}
                             className='bg-purple-600 hover:bg-purple-700 text-white rounded-xl px-6 flex items-center gap-2 font-bold'
@@ -121,7 +128,7 @@ const AdminInterviewHub = () => {
                                 </div>
 
                                 <Button 
-                                    onClick={() => navigate(`/admin/interview/add-question/${company._id}`)}
+                                    onClick={() => navigate(`${basePath}/add-question/${company._id}`)}
                                     variant='outline'
                                     className='w-full border-gray-200 dark:border-zinc-800 rounded-2xl py-6 hover:bg-gray-50 dark:hover:bg-zinc-800 flex items-center justify-center gap-2 font-bold group/btn'
                                 >
@@ -133,22 +140,15 @@ const AdminInterviewHub = () => {
                     </div>
                 )}
 
-                <AnimatePresence>
-                    {isModalOpen && (
-                        <div className='fixed inset-0 z-50 flex items-center justify-center px-4'>
-                            <motion.div 
-                                initial={{ opacity: 0 }}
-                                animate={{ opacity: 1 }}
-                                exit={{ opacity: 0 }}
-                                onClick={() => setIsModalOpen(false)}
-                                className='absolute inset-0 bg-black/60 backdrop-blur-sm'
-                            />
-                            <motion.div 
-                                initial={{ opacity: 0, scale: 0.9, y: 20 }}
-                                animate={{ opacity: 1, scale: 1, y: 0 }}
-                                exit={{ opacity: 0, scale: 0.9, y: 20 }}
-                                className='bg-white dark:bg-zinc-900 w-full max-w-lg rounded-[32px] p-8 relative z-10 shadow-2xl border border-gray-100 dark:border-zinc-800'
-                            >
+                {isModalOpen && (
+                    <div className='fixed inset-0 z-50 flex items-center justify-center px-4'>
+                        <button 
+                            type='button'
+                            aria-label='Close company modal'
+                            onClick={() => setIsModalOpen(false)}
+                            className='absolute inset-0 bg-black/60 backdrop-blur-sm'
+                        />
+                        <div className='bg-white dark:bg-zinc-900 w-full max-w-lg rounded-[32px] p-8 relative z-10 shadow-2xl border border-gray-100 dark:border-zinc-800'>
                                 <h2 className='text-2xl font-black text-gray-900 dark:text-white mb-6 uppercase tracking-tight'>New Company</h2>
                                 <form onSubmit={handleCreateCompany} className='space-y-4'>
                                     <div>
@@ -221,12 +221,11 @@ const AdminInterviewHub = () => {
                                         </Button>
                                     </div>
                                 </form>
-                            </motion.div>
                         </div>
-                    )}
-                </AnimatePresence>
+                    </div>
+                )}
             </main>
-            <Footer />
+            {!embedded && <Footer />}
         </div>
     );
 };

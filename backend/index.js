@@ -20,6 +20,8 @@ import adminRoute from "./routes/admin.route.js";
 import messageRoute from "./routes/message.route.js";
 import assessmentRoute from "./routes/assessment.route.js";
 import interviewRoute from "./routes/interview.route.js";
+import isInterviewManagerAuthenticated from "./middlewares/isInterviewManagerAuthenticated.js";
+import { bulkUploadInterviewQuestions } from "./controllers/interview.controller.js";
 import session from "express-session";
 import passport from "passport";
 import "./utils/passport.js";
@@ -35,18 +37,6 @@ import { fileURLToPath } from "url";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
-app.use(cookieParser());
-app.use(session({
-    secret: process.env.SESSION_SECRET || "your_secret_key",
-    resave: false,
-    saveUninitialized: false,
-}));
-app.use(passport.initialize());
-app.use(passport.session());
-app.use("/uploads", express.static(path.join(__dirname, "public/uploads")));
-
 const corsOptions = {
     origin: (origin, callback) => {
         const allowedOrigins = [
@@ -56,8 +46,9 @@ const corsOptions = {
             'http://127.0.0.1:5173',
             'http://127.0.0.1:5174',
         ].filter(Boolean);
+        const isLocalDevOrigin = /^http:\/\/(localhost|127\.0\.0\.1):\d+$/.test(origin || "");
         // Allow requests with no origin (mobile apps, curl, etc.)
-        if (!origin || allowedOrigins.indexOf(origin) !== -1) {
+        if (!origin || allowedOrigins.indexOf(origin) !== -1 || isLocalDevOrigin) {
             callback(null, true);
         } else {
             console.warn(`CORS blocked request from origin: ${origin}`);
@@ -71,9 +62,35 @@ const corsOptions = {
 }
 
 app.use(cors(corsOptions));
+app.options(/.*/, cors(corsOptions));
+
+app.use(express.json({ limit: "25mb" }));
+app.use(express.urlencoded({ extended: true, limit: "25mb" }));
+app.use((error, req, res, next) => {
+    if (error?.type === "entity.too.large") {
+        return res.status(413).json({
+            message: "Upload chunk is too large. Please retry; the uploader will send smaller chunks.",
+            success: false
+        });
+    }
+    if (error instanceof SyntaxError && "body" in error) {
+        return res.status(400).json({ message: "Invalid JSON payload", success: false });
+    }
+    return next(error);
+});
+app.use(cookieParser());
+app.use(session({
+    secret: process.env.SESSION_SECRET || "your_secret_key",
+    resave: false,
+    saveUninitialized: false,
+}));
+app.use(passport.initialize());
+app.use(passport.session());
+app.use("/uploads", express.static(path.join(__dirname, "public/uploads")));
 
 const PORT = process.env.PORT || 3000;
 
+app.post("/api/v1/interview/bulk-upload-csv", isInterviewManagerAuthenticated, bulkUploadInterviewQuestions);
 
 // api's
 app.use("/api/v1/user", userRoute);
@@ -96,6 +113,22 @@ app.use("/api/v1/interview", interviewRoute);
 // Health check endpoint
 app.get("/api/v1/health", (req, res) => {
     res.json({ status: "ok", timestamp: new Date().toISOString() });
+});
+
+app.use((req, res) => {
+    return res.status(404).json({
+        message: `API route not found: ${req.method} ${req.originalUrl}`,
+        success: false
+    });
+});
+
+app.use((error, req, res, next) => {
+    console.error(error);
+    if (res.headersSent) return next(error);
+    return res.status(error.status || 500).json({
+        message: error.message || "Internal server error",
+        success: false
+    });
 });
 
 const startServer = async () => {

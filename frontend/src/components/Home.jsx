@@ -1,6 +1,7 @@
 import React from 'react'
 import Navbar from './shared/Navbar'
 import HeroSection from './HeroSection'
+import PremiumLandingSections from './landing/PremiumLandingSections'
 import LatestJobs from './LatestJobs'
 import LatestInternship from './LatestInternship'
 import LatestHackathon from './LatestHackathon'
@@ -29,8 +30,14 @@ const Home = () => {
 
             <main className='relative'>
                 <HeroSection />
+                <PremiumLandingSections />
 
-                <div className='relative z-10 space-y-20 pb-20'>
+                <div className='relative z-10 space-y-20 bg-white pb-20 dark:bg-[#09090B]'>
+                    <div className='mx-auto max-w-7xl px-4 pt-20 text-center sm:px-6 lg:px-8'>
+                        <p className='text-[11px] font-black uppercase tracking-[0.24em] text-indigo-500'>Recommended opportunities</p>
+                        <h2 className='mt-3 text-3xl font-black tracking-tight text-gray-950 dark:text-white sm:text-5xl'>Fresh career signals from every category</h2>
+                        <p className='mx-auto mt-4 max-w-2xl text-gray-600 dark:text-zinc-400'>Browse the latest jobs, internships, hackathons, competitions, webinars, and certifications after the AI-powered overview.</p>
+                    </div>
                     <section id="jobs" className='scroll-mt-20'>
                         <LatestJobs />
                     </section>

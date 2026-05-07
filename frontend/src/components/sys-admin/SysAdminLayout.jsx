@@ -21,7 +21,7 @@ const SysAdminLayout = () => {
                 navigate("/sys-admin/login");
                 toast.success(res.data.message);
             }
-        } catch (error) {
+        } catch {
             toast.error("Logout Error");
         }
     };
@@ -35,7 +35,7 @@ const SysAdminLayout = () => {
         { name: 'Competitions', icon: Trophy, path: '/sys-admin/competitions' },
         { name: 'Webinars', icon: Video, path: '/sys-admin/webinars' },
         { name: 'Certifications', icon: Award, path: '/sys-admin/certifications' },
-        { name: 'Mock Interview', icon: Sparkles, path: '/admin/interview/hub' },
+        { name: 'Mock Interview', icon: Sparkles, path: '/sys-admin/mock-interview' },
         { name: 'Analytics', icon: BarChart, path: '/sys-admin/analytics' },
         { name: 'Settings', icon: Settings, path: '/sys-admin/settings' },
     ];

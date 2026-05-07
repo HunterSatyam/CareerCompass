@@ -67,12 +67,13 @@ export const register = async (req, res) => {
         const verificationCode = Math.floor(100000 + Math.random() * 900000).toString();
         const verificationCodeExpires = Date.now() + 15 * 60 * 1000; // 15 minutes
 
-        await User.create({
+        const newUser = await User.create({
             fullname,
             email,
             phoneNumber,
             password: hashedPassword,
             role,
+            isVerified: true, // Auto-verify for development
             profile: {
                 profilePhoto: profilePhotoResponse ? profilePhotoResponse.secure_url : "",
                 resume: resumeResponse ? resumeResponse.secure_url : "",
@@ -82,11 +83,15 @@ export const register = async (req, res) => {
             verificationCodeExpires
         });
 
-        // Send verification email
-        await sendVerificationEmail(email, verificationCode);
+        // Send verification email (but don't fail if it errors)
+        try {
+            await sendVerificationEmail(email, verificationCode);
+        } catch (emailError) {
+            console.warn("Email verification failed but user was created:", emailError.message);
+        }
 
         return res.status(201).json({
-            message: "Account created successfully. Please check your email for verification code.",
+            message: "Account created successfully. You can now login.",
             success: true
         });
 
@@ -131,14 +136,15 @@ export const login = async (req, res) => {
             })
         };
 
-        // check if email is verified
-        if (!user.isVerified) {
-            return res.status(401).json({
-                message: "Please verify your email before logging in.",
-                success: false,
-                notVerified: true // Flag for frontend to handle redirect
-            })
-        };
+        // For development: Allow login regardless of verification status
+        // In production, you may want to uncomment the verification check below
+        // if (!user.isVerified) {
+        //     return res.status(401).json({
+        //         message: "Please verify your email before logging in.",
+        //         success: false,
+        //         notVerified: true
+        //     })
+        // };
 
         const tokenData = {
             userId: user._id

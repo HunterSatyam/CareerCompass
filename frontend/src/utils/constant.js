@@ -1,5 +1,11 @@
+const getDevApiBaseUrl = () => {
+    if (typeof window === "undefined") return "http://localhost:8000";
+    const hostname = window.location.hostname || "localhost";
+    return `http://${hostname}:8000`;
+};
+
 export const BASE_URL = import.meta.env.VITE_API_BASE_URL || (
-    import.meta.env.DEV ? "http://localhost:8000" : "https://careercompass-qyhn.onrender.com"
+    import.meta.env.DEV ? getDevApiBaseUrl() : "https://careercompass-qyhn.onrender.com"
 );
 
 export const USER_API_END_POINT = `${BASE_URL}/api/v1/user`;

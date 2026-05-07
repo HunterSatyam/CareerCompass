@@ -2,15 +2,14 @@ import React, { useState } from 'react';
 import Navbar from '../../shared/Navbar';
 import Footer from '../../shared/Footer';
 import { useParams, useNavigate } from 'react-router-dom';
-import { ChevronLeft, Plus, Send, HelpCircle, Code2, FileText, ListTodo, Trash2, Sparkles } from 'lucide-react';
+import { ChevronLeft, Send, HelpCircle, Code2, FileText, ListTodo, Sparkles } from 'lucide-react';
 import { Button } from '../../ui/button';
 import { Input } from '../../ui/input';
-import { motion } from 'framer-motion';
 import { toast } from 'sonner';
 import axios from 'axios';
 import { INTERVIEW_API_END_POINT } from '@/utils/constant';
 
-const AddInterviewQuestion = () => {
+const AddInterviewQuestion = ({ embedded = false, afterSavePath = '/admin/interview/hub' }) => {
     const { companyId } = useParams();
     const navigate = useNavigate();
     const [loading, setLoading] = useState(false);
@@ -20,6 +19,8 @@ const AddInterviewQuestion = () => {
         description: '',
         questionType: 'Subjective',
         category: 'Technical',
+        role: '',
+        tags: '',
         difficulty: 'Medium',
         frequency: 'Medium',
         tips: '',
@@ -47,7 +48,7 @@ const AddInterviewQuestion = () => {
             
             if (res.data.success) {
                 toast.success(res.data.message);
-                navigate('/admin/interview/hub');
+                navigate(afterSavePath);
             }
         } catch (error) {
             toast.error(error.response?.data?.message || "Failed to add question");
@@ -57,9 +58,9 @@ const AddInterviewQuestion = () => {
     };
 
     return (
-        <div className='min-h-screen bg-gray-50 dark:bg-zinc-950 transition-colors duration-300'>
-            <Navbar />
-            <main className='max-w-4xl mx-auto px-6 py-12'>
+        <div className={embedded ? 'bg-transparent' : 'min-h-screen bg-gray-50 dark:bg-zinc-950 transition-colors duration-300'}>
+            {!embedded && <Navbar />}
+            <main className={embedded ? 'max-w-4xl mx-auto' : 'max-w-4xl mx-auto px-6 py-12'}>
                 <button 
                     onClick={() => navigate(-1)}
                     className='flex items-center gap-2 text-gray-400 hover:text-purple-600 transition-colors font-bold uppercase text-[10px] tracking-widest mb-8'
@@ -82,7 +83,8 @@ const AddInterviewQuestion = () => {
                                     <div className='flex gap-2'>
                                         {[
                                             { id: 'Objective', icon: <ListTodo size={14}/> },
-                                            { id: 'Subjective', icon: <FileText size={14}/> }
+                                            { id: 'Subjective', icon: <FileText size={14}/> },
+                                            { id: 'Coding', icon: <Code2 size={14}/> }
                                         ].map(type => (
                                             <button
                                                 key={type.id}
@@ -106,6 +108,15 @@ const AddInterviewQuestion = () => {
                                         placeholder='e.g. System Design'
                                         value={formData.category}
                                         onChange={(e) => setFormData({...formData, category: e.target.value})}
+                                        className='rounded-xl border-gray-100 dark:border-zinc-800'
+                                    />
+                                </div>
+                                <div>
+                                    <label className='text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1 block'>Role Tag</label>
+                                    <Input 
+                                        placeholder='e.g. Backend Developer'
+                                        value={formData.role}
+                                        onChange={(e) => setFormData({...formData, role: e.target.value})}
                                         className='rounded-xl border-gray-100 dark:border-zinc-800'
                                     />
                                 </div>
@@ -135,6 +146,15 @@ const AddInterviewQuestion = () => {
                                         <option>High</option>
                                         <option>Critical</option>
                                     </select>
+                                </div>
+                                <div>
+                                    <label className='text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1 block'>Tags</label>
+                                    <Input 
+                                        placeholder='DSA, API, SQL'
+                                        value={formData.tags}
+                                        onChange={(e) => setFormData({...formData, tags: e.target.value})}
+                                        className='rounded-xl border-gray-100 dark:border-zinc-800'
+                                    />
                                 </div>
                             </div>
                         </div>
@@ -266,7 +286,7 @@ const AddInterviewQuestion = () => {
                     </div>
                 </form>
             </main>
-            <Footer />
+            {!embedded && <Footer />}
         </div>
     );
 };
